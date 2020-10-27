@@ -1,0 +1,306 @@
+ <!DOCTYPE html>
+  <html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    <title>Relatórios</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "users/bootstrap.min.css" %}" >
+    <link href={% static "users/open-iconic-master/font/css/open-iconic-bootstrap.css" %} rel="stylesheet">
+    {% block content %}
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+  </head>
+
+  <body style="margin-top: 1%;">
+    <div class="container">
+      <div class="row " style="padding-left: 5%;">
+          <span>
+            <img src={% static "images/relatorio.png" %} style="height: 30px; width: 30px; ">
+          </span>
+          <p style="margin-left: 10px; font-size: 150%">Relatórios</p>
+        </div>
+        <button type="submit" class="btn border-0" data-toggle="modal" data-target="#modalExemplo" style="position: absolute; left: 1150px; top: 50px; background-color: #FFFFFF;">
+            <span><img src={% static "images/indice.png" %} style="height: 20px; width: 20px"></span>
+        </button>
+      <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Relatórios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        <div class="modal-body">
+          <p>
+            Os relatórios são subdivididos em tipos:<br>
+            Listagem- Lista de equipamentos cadastrados;<br>
+            Rastreio- Lista a movimentação de equipamentos;<br>
+            Não devolvidos- Lista equipamentos não devolvidos.
+          </p>
+        </div>
+        </div>
+        </div>
+      </div>
+      <div class="modal fade" id="modalExemplo2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            
+        <div class="modal-body text text-center">
+          <p>Carregando ...</p>
+          <div class="spinner-border text-primary"></div>
+        </div>
+        </div>
+        </div>
+      </div>
+        <div class="row justify-content-center">
+          <form action="{% url "get_rastreio" 'Listagem' %}">
+          <button class="btn btn-link text-dark ">
+            Listagem   
+          </button>
+          </form>
+          <form action="{% url "get_rastreio" 'Rastreio' %}">
+          <button class="btn btn-link text-dark" style="margin-left: 45px;">
+            Rastreio
+          </button>
+          </form>
+          <form action="{% url "get_rastreio" 'Não Devolvidos' %}">
+          <button class="btn btn-link text-dark" style="margin-left: 45px;">
+            Não devolvidos
+          </button>
+          </form>
+       </div>
+      <div style="margin-top: 10px;" class="container">
+        <form id="submit-button" class="form-padrao" autocomplete="off" action="{% url "get_rastreio" type %}" method="post">
+          {% csrf_token %}
+          <div class=" form-group row" >
+            <label class="col-lg-2 col-md-2 col-sm-12 col-form-label" for="tipo">Tipo:</label>
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <select name="type_equipment" id="inputState" class=" form-control rounded-pill" style="background: #e9ecef;">
+                <option selected>Todos</option>
+                {% for t in types %}
+                <option>{{ t }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+           {% ifequal type 'Rastreio' %}
+          <div class=" form-group row">
+            <label class="col-sm-2 col-form-label" style="padding-right: 10px;" for="etiqueta/descrição">Etiqueta/Descrição:</label>
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <select name="tag" id="inputState" class=" form-control rounded-pill" style="background: #e9ecef;">
+              <option selected>Todos</option>
+               {% for t in equipments %}
+              <option>{{ t }}</option>
+               {% endfor %}
+            </select>
+          </div>
+        </div>
+          <div  class="form-group row">
+            <label class="col-sm-2 col-form-label"> Início:</label>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+            <input type="date" class="btn rounded-pill" name="start"required onkeypress="$(this).mask('00/00/0000');" pattern="[0-9]+$" style="background: #e9ecef;">
+          </div>
+          <div  class="form-group row " style="padding-top: 10px;">
+            <label class="col-sm-2 col-form-label">Fim:</label>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+          <input type="date" class="btn rounded-pill" name="end" required onkeypress="$(this).mask('00/00/0000');" pattern="[0-9]+$" style="background: #e9ecef; height: 35px;">
+          </div>
+          </div>
+          {% endifequal %}
+           {% ifequal type 'Não Devolvidos' %}
+          <div class=" form-group row">
+            <label class="col-sm-2 col-form-label" style="padding-right: 10px;" for="etiqueta/descrição">Etiqueta/Descrição:</label>
+            <div class="col-lg-10 col-md-10 col-sm-12">
+              <select name="tag" id="inputState" class=" form-control rounded-pill" style="background: #e9ecef;">
+              <option selected>Todos</option>
+               {% for t in equipments %}
+              <option>{{ t }}</option>
+               {% endfor %}
+            </select>
+          </div>
+        </div>
+          <div  class="form-group row">
+            <label class="col-sm-2 col-form-label"> Início:</label>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+            <input type="date" class="btn rounded-pill" name="start"required onkeypress="$(this).mask('00/00/0000');" pattern="[0-9]+$" style="background: #e9ecef;">
+          </div>
+        </div>
+          {% endifequal %}
+          
+          <div class="col-lg-12 col-sm-12 text-right" >
+        <button type="submit" class="btn rounded-pill"style="background-color: #e9ecef; color: black;">Realizar Pesquisa</button>            
+      </div>
+        </form>
+      </div>
+      <table class="table table-sm" style="  margin:auto; margin-top: 10px;" >
+  <thead>
+    <tr class="d-flex">
+     {% ifequal type 'Listagem' %}
+      <th class="col-lg-3 col-md-3 col-sm-3">
+        <a href="{% url "listagem" 'type_equipment__name' type_equipment_  %}"  style="color: black;">Tipo</a>
+      </th>
+      <th class="col-lg-3 col-md-3 col-sm-3">
+        <a href="{% url "listagem" 'tag' type_equipment_ %}"  style="color: black;" >Etiqueta</a>
+      </th>
+      <th class="col-lg-3 col-md-3 col-sm-3">
+        <a href="{% url "listagem" 'description' type_equipment_ %}" style="color: black;">Descrição</a>
+      </th>
+      <th class="col-lg-3 col-md-3 col-sm-3">
+      <a href="{% url "listagem" 'amount_of_loans' type_equipment_ %}" style="color: black;">Qtd. Emprestimo</a>
+      </th>
+      {% endifequal %}
+      {% ifequal type 'Rastreio' %}
+      <th class="col-lg-2 col-md-2 col-sm-2">
+          <a href="{% url "rastreio" 'equipment__type_equipment__name' type_equipment_ tag_ start_ end_ %}" style="color: black;">Tipo</a>
+      </th>
+      <th class="col-lg-1 col-md-1 col-sm-1">
+        <a href="{% url "rastreio" 'equipment__tag' type_equipment_ tag_ start_ end_ %}" style="color: black;">Etiqueta</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "rastreio" 'equipment__description' type_equipment_ tag_ start_ end_ %}" style="color: black;">Descrição</a>
+      </th>
+      <th class="col-lg-1 col-md-1 col-sm-1">
+          <a href="{% url "rastreio" 'loan' type_equipment_ tag_ start_ end_ %}" style="color: black;">Solicitação</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "rastreio" 'user_loan' type_equipment_ tag_ start_ end_ %}" style="color: black;">Responsável</a>
+      </th>
+      <th class="col-lg-1 col-md-1 col-sm-1">
+        <a href="{% url "rastreio" 'devolution' type_equipment_ tag_ start_ end_ %}" style="color: black;">Devolução</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "rastreio" 'user_devolution' type_equipment_ tag_ start_ end_ %}" style="color: black;">Responsável</a>
+      </th>
+      <th class="col-lg-1 col-md-1 col-sm-1">
+        <a href="{% url "rastreio" 'amount_of_loans' type_equipment_ tag_ start_ end_ %}" style="color: black;">Qtd. empr.</a>
+      </th>
+      {% endifequal %}
+      {% ifequal type 'Não Devolvidos' %}
+      <th class="col-lg-2 col-md-2 col-sm-2" >
+        <a href="{% url "nao_devolvidos" 'equipment__type_equipment__name' type_equipment_ tag_ start_ %}" style="color: black;">Tipo</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "nao_devolvidos" 'equipment__tag' type_equipment_ tag_ start_ %}" style="color: black;">Etiqueta</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "nao_devolvidos" 'equipment__description' type_equipment_ tag_ start_ %}" style="color: black;">Descrição</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "nao_devolvidos" 'loan' type_equipment_ tag_ start_ %}" style="color: black;">Solicitação</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "nao_devolvidos" 'user_loan' type_equipment_ tag_ start_ %}" style="color: black; "> Responsável </a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+      <a href="{% url "nao_devolvidos" 'amount_of_loans' type_equipment_ tag_ start_ %}" style="color: black;">Qtd. Emprestimo</a>
+      </th>
+      {% endifequal %}
+    </thead>
+    {% load my_tag %}
+  <tbody>
+    {% ifequal type 'Rastreio' %}
+    {% for equipment_user in list_equipment_user %}
+    <tr class="d-flex">
+    <td class="col-lg-2 col-md-2 col-sm-2">{% TypeName equipment_user.equipment %}</td>
+    <td class="col-lg-1 col-md-1 col-sm-1">{% TagName equipment_user.equipment %}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{% DescriptionName equipment_user.equipment %}</td>
+    <td class="col-lg-1 col-md-1 col-sm-1">{{ equipment_user.loan|date:"d/m/Y"}}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{{ equipment_user.user_loan }}</td>
+    <td class="col-lg-1 col-md-1 col-sm-1">{{ equipment_user.devolution|date:"d/m/Y" }}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{{ equipment_user.user_devolution }}</td>
+    <td class="col-lg-1 col-md-1 col-sm-1">{{ equipment_user.amount_of_loans }}</td>
+    </tr>
+     {% empty %}
+    <tr>
+        <td class="col-lg-6 col-md-6 col-sm-6 text-center">Sem resultados</td>
+    </tr>
+    {% endfor %}
+    {% endifequal %}
+    {% ifequal type 'Não Devolvidos' %}
+    {% load my_tag %}
+    {% for equipment_user in list_equipment_user %}
+    <tr class="d-flex">
+    <td class="col-lg-2 col-md-2 col-sm-2">{% TypeName equipment_user.equipment %}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{% TagName equipment_user.equipment %}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{% DescriptionName equipment_user.equipment %}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{{ equipment_user.loan|date:"d/m/Y" }}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{{ equipment_user.user_loan }}</td>
+    <td class="col-lg-2 col-md-2 col-sm-2">{{ equipment_user.amount_of_loans }}</td>
+    </tr>
+     {% empty %}
+    <tr>
+        <td class="col-lg-6 col-md-6 col-sm-6 text-center">Sem resultados</td>
+    </tr>
+    {% endfor %}
+    {% endifequal %}
+
+    {% ifequal type 'Listagem' %}
+      {% for equipment_user in list_equipment_user %}
+      <tr class="d-flex">
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ equipment_user.type_equipment }}</td>
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ equipment_user.tag }}</td>
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ equipment_user.description }}</td>
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ equipment_user.amount_of_loans }}</td>
+      </tr>
+      {% empty %}
+    <tr>
+        <td class="col-lg-6 col-md-6 col-sm-6 text-center">Sem resultados</td>
+    </tr>
+    {% endfor %}
+
+    {% endifequal %}
+  
+       </tbody>
+</table>
+
+
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+        {% if list_equipment_user.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primeira</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ list_equipment_user.previous_page_number }}">Anterior</a></li>
+        {% endif %}
+
+        <li class="page-item"><a class="page-link">
+            Página {{ list_equipment_user.number }} de {{ list_equipment_user.paginator.num_pages }}.
+        </a></li>
+
+        {% if list_equipment_user.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ list_equipment_user.next_page_number }}">Próxima</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ list_equipment_user.paginator.num_pages }}">Última &raquo;</a></li>
+        {% endif %}
+  </ul>
+</nav>
+
+  <div class="row" style="padding-left: 85%; margin-top: 10px; margin-bottom: 15px;">
+    {% if order_by != 'Vazio' %}    
+    <form action="{% url "some_view" type type_equipment_ tag_ start_ end_ order_by %}" class="form-inline">
+      <button class="btn rounded-pill" style="background: #e9ecef">
+        Gerar PDF
+      </button>
+    </form>
+    {% endif %}
+    <form action="{% url "home" %}" class="form-inline">  
+      <button class="btn rounded-pill" style="margin-left: 5px; background: #e9ecef;">
+          Voltar
+        </button>
+      </div>
+    </form>
+    
+  </div>
+  
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+   <script src={% static "users/js/bootstrap.min.js" %}></script>
+      <script>
+$("#submit-button").submit(function(e){
+    $('#modalExemplo2').modal('show');
+    $("#submit-button").submit();
+    return false;
+});
+  </script>
+
+</body>
+{% endblock %}
+</html>

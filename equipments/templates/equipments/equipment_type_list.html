@@ -1,0 +1,145 @@
+  <!DOCTYPE html>
+  <html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    <title>Tipo de Equipamentos</title>
+    {% load static %}
+  <link href={% static "users/open-iconic-master/font/css/open-iconic-bootstrap.css" %} rel="stylesheet">
+  <link rel="stylesheet" href="{% static "users/bootstrap.min.css" %}" >
+{% block content %}
+  </head>
+  <body style="margin-top: 3%;">
+
+    <div class="modal fade" id="NovoModalNovo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Novo Tipo de Equipamento </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       {% for message in messages %}
+        <div class="alert alert-danger">
+          <strong>Error!</strong> {{ message }}
+        </div>
+      {% endfor %}
+       <form method="post" action="{% url 'equipment_type_new' %}">{% csrf_token %}
+          <div class="form-group row">
+            <label class="col-lg-4 col-md-4 col-sm-12 col-form-label" for="nome">Nome:</label>
+             <div class="col-lg-8 col-md-8 col-sm-12">
+              <input class="form-control rounded-pill" type="text" value="{{equipment_type.name}}" name="tag" id="name_type" pattern="^[A-Za-záàâãéèêíïóôõöúçñÁÀÂÃÉÈÍÏÓÔÕÖÚÇÑ ]+$" title="Este campo aceita apenas letras" maxlength="20" required style=" background: #e9ecef" >
+             </div>
+          </div>
+          <div class="form-group row">
+            <label class="col-lg-4 col-md-4 col-sm-12 col-form-label" for="tipo">Tempo Máximo:</label>
+             <div class="col-lg-8 col-md-8 col-sm-12">
+              <input class="form-control rounded-pill" value="{{equipment_type.time_maximum}}" type="number" min="1" name="time_type" id="time_type" required pattern="[0-9]+$" style=" background: #e9ecef">
+             </div>
+          </div>     
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button class="btn btn-primary">Salvar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <div class="container">
+      <div class="row " style="padding-left: 5%;">
+          <span>
+            <img src={% static "images/equipamentos.png" %} style="height: 30px; width: 30px; ">
+          </span>
+          <p style="margin-left: 10px; font-size: 150%">Tipos de equipamentos</p>
+        </div>
+        
+    <div style="margin-top: 10px;" class="row justify-content-center">
+        <form class="form-inline" method="POST" action="{% url 'search_type' %}">{% csrf_token %}
+          <div class="input-group">
+            <input class="form-control mr-2 rounded-pill" type="cemquipamento" name="cemquipamento" style="width: 900px; background: #e9ecef">
+            <button class="border-0" style="background: #FFFFFF;">
+              <span>
+                <img src={% static "images/lupa.png" %} style="height: 30px; width: 30px">
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+            
+
+      </div>
+
+  <table class="table table-sm" style="width: 1000px;  margin:auto; margin-top: 10px;" >
+  <thead>
+    <tr>
+      <th scope="col" width="60%" style="text-align: left;">
+        <a href="" style="color: black;">Nome</a>
+      </th>
+      <th scope="col" width="40%" style="text-align: left;">
+        <a href="{% url "equipment_type_order_by" 'name' %}" style="color: black;">Ações</a>
+      </th>
+    </tr>
+    </thead>
+  <tbody>
+   {% load my_tag %}
+   {% for equipment_type in object_list  %}
+    <tr>
+    
+      <td>{{ equipment_type.name }}</td>
+      
+      <td >
+
+        {% include 'equipments/equipment_type_form.html' with equipment_type=equipment_type %}
+          <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalEdit{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
+            Editar
+          </button>
+
+        {% include 'equipments/equipment_type_confirm_delete.html' with equipment_type=equipment_type %}
+          <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalLabel{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
+            {% ActiveOrInactiveType equipment_type.id %}
+          </button>
+      </td>
+    </tr>
+     {% endfor %}
+  </tbody>
+</table>
+ <hr width="1000px" style="margin-top: -1px;">
+   <nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link" href="#">Primeira</a></li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item"><a class="page-link" href="#">Última</a></li>
+    </ul>
+  </nav>
+  <div class="row" style="padding-left: 80%; margin-top: 10px; margin-bottom: 15px;">
+        
+        <button data-toggle="modal" data-target="#NovoModalNovo" class="btn rounded-pill" style="background: #e9ecef">
+          Novo
+        </button>
+       
+       
+        <a href="{% url "equipment_list" %}" class="btn rounded-pill" style="margin-left: 5px;background: #e9ecef">
+          Voltar
+        </a>
+
+  </div>
+ </div>
+ <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src={% static "users/js/bootstrap.min.js" %}></script>
+    <script>
+          $(document).ready(function() {
+            $('#ModalEdit{{chave}}').modal('show');
+            $('#{{open}}ModalNovo').modal('show');
+          });
+    </script>
+</body>
+{% endblock %}
+</html>

@@ -1,0 +1,205 @@
+  <!DOCTYPE html>
+  <html lang="pt-br">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+    <title>Usuários</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "users/bootstrap.min.css" %}">
+    <link href={% static "users/open-iconic-master/font/css/open-iconic-bootstrap.css" %} rel="stylesheet">
+  {% block content %}
+  </head>
+  <body style="margin-top: 1%;">
+    <div class="container">
+      <div class="row " style="padding-left: 5%;">
+          <span>
+            <img src={% static "images/usuario.png" %} style="height: 30px; width: 30px; ">
+          </span>
+          <p style="margin-left: 10px; font-size: 150%">Usuário</p>
+        </div>
+        <div class="row justify-content-center">
+          <a href="{% url "user_list" %}" class="btn btn-link text-dark" >
+            Todos
+          </a>
+          <a href="{% url "filter_type" 'Super' %}" class="btn btn-link text-dark "style="margin-left: 45px;" >
+            Super Usuário  
+          </a>
+          <a href="{% url "filter_type" 'Administrador' %}" class="btn btn-link text-dark" style="margin-left: 45px;">
+            Administrador
+          </a>
+          <a href="{% url "filter_type" 'Comum' %}" class="btn btn-link text-dark" style="margin-left: 45px;">
+            Usuário Comum
+          </a>
+          
+        </div>
+            <div style="margin-top: 10px;" class="row justify-content-center">
+        <form class="form-inline" method="POST" action="{% url 'search' type search %}" >{% csrf_token %}
+          <div class="input-group">
+            <input class="form-control  rounded-pill" type="text" placeholder="Search.." name="search" required="required" style="width: 800px; background: #e9ecef">
+            <div class="submit">
+            <button class="border-0" type="submit" style="background: #FFFFFF;">
+              <span>
+                <img src="{% static "images/lupa.png" %}" style="height: 30px; width: 30px">
+              </span>
+            </button>
+        <a href="{% url "user_list_inactive" %}" type="button" class="btn rounded-pill" style="background: #e9ecef">Ver inativos</a>
+            </div>
+          </div>
+        </form>
+      </div>
+            
+      <table class="table table-sm" style="width: 1000px;  margin:auto; margin-top: 10px;" >
+  <thead>
+    <tr class="d-flex">
+      <th class="col-lg-2 col-md-2 col-sm-2">
+        <a href="{% url "filter_list" 'Id' type %}" style="color: black;">Código</a>
+      </th>
+      <th class="col-lg-3 col-md-3 col-sm-3">
+        <a href="{% url "filter_list" 'Nome' type %}" style="color: black;">Nome</a>
+      </th>
+      <th class="col-lg-3 col-md-3 col-sm-3">
+        <a href="{% url "filter_list" 'CPF' type %}" style="color: black;">CPF</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+      <a href="" style="color: black;">Privilégio</a>
+      </th>
+      <th class="col-lg-2 col-md-2 col-sm-2">
+      <a href="" style="color: black;">Ações</a>
+      </th>
+    </tr>
+    </thead>
+  <tbody>
+  {% load my_tag %}
+    {% for user in object_list %}
+    {% for type in type_user %}
+    {% if type.user_type == 'Super' and user.user_type == 'Super' or type.user_type != 'Comum' and user.user_type != 'Super' %}
+    <tr class="d-flex">
+      <td class="col-lg-2 col-md-2 col-sm-2">{{ user.id }}</td>
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ user.usuario }}</td>
+      <td class="col-lg-3 col-md-3 col-sm-3">{{ user.cpf }}</td>
+      <td class="col-lg-2 col-md-2 col-sm-2">{{ user.user_type }}</td>
+      <td class="col-lg-2 col-md-2 col-sm-2">
+        <div class="row">
+        <form class="form-inline" action="{% url "user_edit" user.id %}">
+        <button class="btn btn-sm rounded-pill" style="background: #e9ecef">
+            Editar
+          </button>
+          </form>
+          <button type="button  " class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#Modal{{ user.id }}" style="margin-left: 5px; background: #e9ecef;">
+           {% ActiveOrInactiveUser user.id %}
+          </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="Modal{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Desativar Usúario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              {% load my_tag %}
+              <div class="modal-body">
+                Você tem certeza que deseja  {% ActiveOrInactiveUser user.id %} "{{ user.usuario }}"?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <form method="post" action="{% url "user_delete" user.id %}">{% csrf_token %}
+                <button type="submit" class="btn btn-primary">Confimar</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+                   {% for type in type_user %}
+          {% ifequal type.user_type 'Super' %}
+
+          <button type="button" class="btn btn-sm border-0" data-toggle="modal" data-target="#Modal2{{ user.id }}" style="background: #FFFFFF;">
+              <span>
+                <img src={% static "images/engrenagem.png" %} style="height: 23px; width: 23px">
+              </span>
+            </button>
+            <!-- Modal -->
+        <div class="modal fade" id="Modal2{{ user.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Tipo de Usuário</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+              <form method="POST" action="{% url 'type_user' user.id %}">{% csrf_token %}
+                <p>Selecione:</p>
+                <input type="radio" id="Comum" name="type" value="Comum" checked="">
+                <label for="Comum">Comum</label><br>
+                <input type="radio" id="Administrador" name="type" value="Administrador">
+                <label for="Administrador">Administrador</label><br>
+                <input type="radio" id="Super" name="type" value="Super">
+                <label for="Super">Super</label><br>
+              
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                <button type="submit" class="btn btn-primary">Confimar</button>
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+            {% endifequal %}
+          {% endfor %}
+        </div>
+      </td>
+      {% endif %}
+      {% endfor %}
+    </tr>
+     {% empty %}
+    <tr>
+        <td class="col-lg-6 col-md-6 col-sm-6 text-center">Sem resultados</td>
+    </tr>
+    
+    {% endfor %}
+  </tbody>
+</table> <hr width="1000px" style="margin-top: -1px;">
+<nav aria-label="Page navigation">
+  <ul class="pagination justify-content-center">
+          {% if object_list.has_previous %}
+              <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primeira</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ object_list.previous_page_number }}">Anterior</a></li>
+          {% endif %}
+
+          <li class="page-item"><a class="page-link">
+              Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}.
+          </a></li>
+
+          {% if object_list.has_next %}
+              <li class="page-item"><a class="page-link" href="?page={{ object_list.next_page_number }}">Próxima</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ object_list.paginator.num_pages }}">Última &raquo;</a></li>
+          {% endif %}
+  </ul>
+</nav>
+
+
+  <div class="row" style="padding-left: 85%; margin-bottom: 5px;"  >
+        <form class="form-inline" action="{% url "user_new" %}">
+        <button class="btn rounded-pill" style="background: #e9ecef">
+          Novo
+        </button>
+        </form>
+        
+        <form class="form-inline" action="{% url "home" %}">
+        <button class="btn rounded-pill" style="margin-left: 5px;background: #e9ecef;">
+          Voltar
+        </button>
+        </form>
+      </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="{% static "users/js/bootstrap.min.js" %}"></script>
+</body>
+{% endblock %}
+</html>

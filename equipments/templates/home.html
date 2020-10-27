@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1, shrink-to-fit=no">
+	<title>Pagina Inicial</title>
+    {% load static %}
+    <link href={% static "users/open-iconic-master/font/css/open-iconic-bootstrap.css" %} rel="stylesheet">
+    <link rel="stylesheet" href={% static "users/bootstrap.min.css" %}>
+    {% block content %}
+</head>
+<body class="pt-4">
+    <div class="text-center">
+	   <img src={% static "images/logo.png" %} align=”middle alt="Responsive image" style="height: 180px; width: 200px">
+	</div>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn border-0" data-toggle="modal" data-target="#exampleModal" style="position: absolute; left: 1000px; top: 100px; background-color: #FFFFFF;">
+          Sair
+          <span><img src={% static "images/enter.png" %} style="height: 20px; width: 20px"></span>
+        </button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Confirme</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Você tem certeza que deseja sair?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <form method="post" action="{% url "logout" %}">{% csrf_token %}
+        <button type="submit" class="btn btn-primary">Confirmar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+        <div class="text-center">
+          <div class=" btn-group-vertical">
+            <form action="{% url "equipment_list" %}">
+              <button type="submit" class="btn btn-lg rounded" style=" background-color: #C0C0C0;height: 80px; width: 250px; margin-top: 20px; ">
+                  <span>
+                      <img src={% static "images/equipamentos.png" %} style="height: 30px; width: 30px">
+                  </span>
+                  Equipamentos
+              </button>
+            </form>
+            <form action="{% url "user_list" %}">
+              <button class="btn btn-lg rounded" style=" background-color: #C0C0C0; height: 80px; width: 250px; margin-top: 20px;">
+
+                 <span>
+                    <img src={% static "images/usuario.png" %}  style="height: 30px; width: 30px">
+                 </span>
+                  Usuários
+              </button>
+            </form>
+            <form action="{% url "get_rastreio" 'Listagem' %}">
+              <button class="btn btn-lg rounded" style=" background-color: #C0C0C0;height: 80px; width: 250px;  margin-top: 20px;">
+                  <span>
+                    <img src={% static "images/relatorio.png" %} style="height: 30px; width: 30px">
+                 </span>
+                  Relatórios
+              </button>
+            </form>
+            </div>
+        </div>
+<div class="text-center">
+<div style="float:left; width:50%"><img src={% static "images/ifce.png" %} style="height: 70px; width: 240px;"></div>
+<div style="float:left; width:50%">Feito por:<img src={% static "images/nupreds.png" %} style="height: 100px; width: 260px;"></div>
+</div>
+        
+        
+	 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src={% static "users/js/bootstrap.min.js" %}></script>
+
+
+</body>
+{% endblock %}
+</html>
