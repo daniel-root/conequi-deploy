@@ -23,7 +23,7 @@ SECRET_KEY = '_xu)vn+lxld5nbot@ya*3*d#w2m+gdt_af*)ap2$@0bf@0zzc*'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -87,11 +87,14 @@ DATABASES = {
 DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'db_conequi',
-            'USER': 'conequi',
+            'NAME': 'nupreds',
+            'USER': 'nupreds@nupreds',
             'PASSWORD': 'HInduCcirLcDBAb6',
-            'HOST': 'localhost',
+            'HOST': 'nupreds.mysql.database.azure.com',
             'PORT': '3306',
+            'OPTIONS': {
+            'ssl': {'ca': '/var/www/html/BaltimoreCyberTrustRoot.crt.pem'}
+            }
         }
     }
 '''
@@ -135,7 +138,7 @@ USE_TZ = False
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, ‘static’))
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 '''
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),

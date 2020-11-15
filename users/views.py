@@ -162,16 +162,53 @@ def user_create(request, template_name='users/user_form.html'):
         return render(request, template_name, data)
     return render(request, 'login.html')
 
+from django.http import JsonResponse
+
+def checkCPF(request):
+    # request should be ajax and method should be GET.
+    if request.is_ajax and request.method == "GET":
+        # get the nick name from the client side.
+        cpf = request.GET.get("cpf", None)
+        # check for the nick name in the database.
+        if Client.objects.filter(cpf = cpf).exists():
+            # if nick_name found return not valid new friend
+            return JsonResponse({"valid":False}, status = 200)
+        else:
+            # if nick_name not found, then user can create a new friend.
+            return JsonResponse({"valid":True}, status = 200)
+
+    return JsonResponse({}, status = 400)
+
+def checkCPFupdate(request,pk):
+    #print(Client.objects.get(id = pk).usuario)
+    # request should be ajax and method should be GET.
+    if request.is_ajax and request.method == "GET":
+        # get the nick name from the client side.
+        cpf = request.GET.get("cpf", None)
+        # check for the nick name in the database.
+        if Client.objects.filter(cpf = cpf, id=pk):
+            return JsonResponse({"valid":True}, status = 200)
+        else:    
+            if Client.objects.filter(cpf = cpf).exists():
+                # if nick_name found return not valid new friend
+                return JsonResponse({"valid":False}, status = 200)
+            else:
+                # if nick_name not found, then user can create a new friend.
+                return JsonResponse({"valid":True}, status = 200)
+
+    return JsonResponse({}, status = 400)
+
 def user_update(request, pk, template_name='users/user_form.html'):
     if request.session.has_key('username'):
         #print('chequi')
         data = {}
         user= get_object_or_404(Client, pk=pk)
-        form = ClientForm(request.POST or None, instance=user)
+        #form = ClientForm(request.POST or None, instance=user)
         #data['form']= form
         data['user']= user
         if request.method == 'POST':
             update_user = Client.objects.filter(pk=pk)
+            #print(request.POST)
             update_user.update(
             usuario = request.POST['usuario'],
             email = request.POST['email'],
@@ -392,3 +429,5 @@ def search_user(request,value,search_):
         data['type'] = 'type'
         return render(request, 'users/user_list.html', data)
     return render(request, 'login.html')
+
+

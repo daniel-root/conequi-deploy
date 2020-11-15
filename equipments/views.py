@@ -37,12 +37,12 @@ def EquipmentTypeUnique(pk):
 
 def equipment_type_list(request, templete_name='equipments/equipment_type_list.html'):
     data = {}
-    data['object_list'] = Equipment_type.objects.all()
+    data['object_list'] = get_page(request,Equipment_type.objects.all())
     return render(request, templete_name, data)
 
 def equipment_type_order_by(request,value, templete_name='equipments/equipment_type_list.html'):
     data = {}
-    data['object_list'] = EquipmentTypeAllOrderBy(value)
+    data['object_list'] = get_page(request,EquipmentTypeAllOrderBy(value))
     return render(request, templete_name, data)
 
 def equipment_type_view(request, pk, template_name='equipments/equipment_type_detail.html'):   
@@ -60,7 +60,7 @@ def equipment_type_create(request, template_name='equipments/equipment_type_form
             messages.error(request, 'Tipo de equipamento já existe!')
             data = {}
             data['equipment_type'] = {'name':request.POST['tag'],'time_maximum':request.POST['time_type']}
-            data['object_list'] = Equipment_type.objects.all()
+            data['object_list'] = get_page(request,Equipment_type.objects.all())
             data['open'] = 'Novo'
             return render(request, 'equipments/equipment_type_list.html', data)
     return render(request, template_name)
@@ -78,7 +78,7 @@ def equipment_type_update(request, pk, template_name='equipments/equipment_type_
             messages.error(request, 'Tipo de equipamento já existe!')
             data = {}
             #data['equipment_type'] = {'name':request.POST['tag'],'time_maximum':request.POST['time_type']}
-            data['object_list'] = Equipment_type.objects.all()
+            data['object_list'] = get_page(request,Equipment_type.objects.all())
             data['chave'] = str(equipment_type[0].id)
             return render(request, 'equipments/equipment_type_list.html', data)
         return redirect('equipment_type_list')
@@ -204,12 +204,29 @@ def equipment_delete(request, pk, template_name='equipments/equipment_confirm_de
     return render(request, 'login.html')
 count = 0
 
-def email_(request,pk):
+def email_(request,pk,template_name='equipments/equipment_list.html'):
     equipment_user = Equipment_user.objects.get(equipment=pk,devolution=None)
     user = Client.objects.filter(usuario=equipment_user.user_loan)
     equipment = Equipment.objects.filter(id = equipment_user.equipment)
-    email_atraso(user[0].usuario, equipment[0].type_equipment, equipment[0].tag, equipment[0].description,user[0].email)
-    return redirect('/Equipamentos')
+    internet = email_atraso(user[0].usuario, equipment[0].type_equipment, equipment[0].tag, equipment[0].description,user[0].email)
+    #print(internet)
+    data = {}
+    data['type'] = 'Todos'
+    data['search'] = 'Null'
+    equipment_list = EquipmentActiveAll()
+    data['list_equipment'] = get_page(request,equipment_list)
+    data['equipments'] = EquipmentActiveAll()
+    data['type_equipment']= EquipmentTypeAll()
+    print(internet)
+    if internet:
+        equipment.update(email_sent=True)
+        data['email_enviado'] = "email-enviado"
+        print("Enviado")
+    else:
+        equipment.update(email_sent=False)
+        data['email_enviado'] = "email-não-enviado"
+        print("Não Enviado")
+    return render(request,template_name,data)
     
 
 def emprestar(request,pk):

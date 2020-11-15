@@ -19,8 +19,8 @@
           </span>
           <p style="margin-left: 10px; font-size: 150%">Relatórios</p>
         </div>
-        <button type="submit" class="btn border-0" data-toggle="modal" data-target="#modalExemplo" style="position: absolute; left: 1150px; top: 50px; background-color: #FFFFFF;">
-            <span><img src={% static "images/indice.png" %} style="height: 20px; width: 20px"></span>
+        <button type="submit" class="btn border-0 rounded-pill" data-toggle="modal" data-target="#modalExemplo" style="position: absolute; left: 1150px; top: 50px; background-color: #FFFFFF;">
+            <span><img src={% static "images/indice.png" %} style="height: 19px; width: 19px"></span>
         </button>
       <div class="modal fade" id="modalExemplo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -55,19 +55,37 @@
       </div>
         <div class="row justify-content-center">
           <form action="{% url "get_rastreio" 'Listagem' %}">
-          <button class="btn btn-link text-dark ">
+          {% ifequal type 'Listagem' %}
+          <button id="listagem" class="btn rounded-pill" style="background: #4de7ff; color: black;">
             Listagem   
           </button>
+          {% else %}
+          <button id="listagem" class="btn btn-link text-dark" >
+            Listagem   
+          </button>
+          {% endifequal %}
           </form>
           <form action="{% url "get_rastreio" 'Rastreio' %}">
-          <button class="btn btn-link text-dark" style="margin-left: 45px;">
+          {% ifequal type 'Rastreio' %}
+          <button class="btn rounded-pill" style="background: #4de7ff; color: black;">
             Rastreio
           </button>
+          {% else %}
+          <button class="btn btn-link text-dark "  style="margin-left: 45px;">
+            Rastreio
+          </button>
+          {% endifequal %}
           </form>
           <form action="{% url "get_rastreio" 'Não Devolvidos' %}">
-          <button class="btn btn-link text-dark" style="margin-left: 45px;">
+          {% ifequal type 'Não Devolvidos' %}
+          <button class="btn rounded-pill" style="background: #4de7ff; color: black;">
             Não devolvidos
           </button>
+          {% else %}
+          <button class="btn btn-link text-dark " id="E"style="margin-left: 45px;">
+            Não devolvidos
+          </button>
+          {% endifequal %}
           </form>
        </div>
       <div style="margin-top: 10px;" class="container">
@@ -281,8 +299,8 @@
       </button>
     </form>
     {% endif %}
-    <form action="{% url "home" %}" class="form-inline">  
-      <button class="btn rounded-pill" style="margin-left: 5px; background: #e9ecef;">
+    <form action="{% url "home" %}" class="form-inline" style="padding-left: 59%">  
+      <button class="btn rounded-pill" style="margin-left: 2px; background: #e9ecef;">
           Voltar
         </button>
       </div>
@@ -300,6 +318,7 @@ $("#submit-button").submit(function(e){
     return false;
 });
   </script>
+
 
 </body>
 {% endblock %}

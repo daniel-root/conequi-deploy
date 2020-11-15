@@ -10,6 +10,47 @@
   {% block content %}
 </head>
 <body >
+
+<div class="modal fade" id="Modalemail-enviado" tabindex="-1" aria-labelledby="Modalemail-enviado" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Email para devolução</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button> 
+                </div>
+                <div class="modal-body">
+                  Email enviado com sucesso!
+                </div>
+                <div class="modal-footer">
+                  <a href="{% url "equipment_list" %}" type="button" class="btn btn-secondary" data-dismiss="modal">Sair</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="modal fade" id="Modalemail-não-enviado" tabindex="-1" aria-labelledby="Modalemail-não-enviado" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Email para devolução</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                  Email não enviado!
+                </div>
+                <div class="modal-footer">
+                  <a href="{% url "equipment_list" %}" type="button" class="btn btn-secondary" data-dismiss="modal">Sair></a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
 {% for equipment in equipments %}
                 <div class="modal fade" id="EscolhaModal{{equipment.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog" role="document">
@@ -48,7 +89,7 @@
                         </form>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cancelar</button>
+                        <a href="{% url "equipment_list" %}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar></a>
                         
                       </div>
                     </div>
@@ -99,7 +140,7 @@
               </div>
 
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="{% url "equipment_list" %}" type="button" class="btn btn-secondary" data-dismiss="modal">Voltar></a>
                   
                 </div>
               </div>
@@ -147,7 +188,7 @@
               </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Voltar</button>
+                  <a href="{% url "equipment_list" %}" type="button" class="btn btn-secondary">Voltar</a>
                   <button type="submit" class="btn btn-primary">Confirmar</button>
                 </div>
                 </form>
@@ -262,9 +303,16 @@
           {% LoanOrDevolution equipment.id %}
           </button>
           {% if 'Atrasado' == equipment.status %}
-          <a href="{% url "email_" equipment.id %}" class="border-0" style="background-color: white;">
-            <span class="oi oi-envelope-closed"></span>
-          </a>
+            {% if equipment.email_sent %}
+             <a href="{% url "email_" equipment.id %}" class="border-0" ata-toggle="modal"  data-toggle="tooltip" data-placement="top" title="Realizar envio manual">
+              <span><img class="border-0" src="{% static "images/mensagem.png" %}" style="height: 30px; width: 30px;"></span>
+            </a>
+            {% else %}
+            <a href="{% url "email_" equipment.id %}" class="border-0" ata-toggle="modal"  data-toggle="tooltip" data-placement="top" title="Envio automatico não enviado. Realizar envio manual">
+              <span><img class="border-0" src="{% static "images/email-vermelho.png" %}" style="height: 30px; width: 30px;"></span>
+            </a>
+            {% endif %}
+
           {% endif %}
       </div>
              
@@ -281,7 +329,6 @@
  
 </table>
 
-<hr width="1000px" style="margin-top: -1px;">
 <nav aria-label="Page navigation">
       <ul class="pagination justify-content-center">
           {% if list_equipment.has_previous %}
@@ -335,6 +382,10 @@
     <script>
           $(document).ready(function() {
             $('#Modal{{chave}}').modal('show');
+            document.myForm{{chave}}.submit();
+          });
+          $(document).ready(function() {
+            $('#Modal{{email_enviado}}').modal('show');
             document.myForm{{chave}}.submit();
           });
     </script>

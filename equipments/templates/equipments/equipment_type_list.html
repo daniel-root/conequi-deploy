@@ -9,7 +9,8 @@
   <link rel="stylesheet" href="{% static "users/bootstrap.min.css" %}" >
 {% block content %}
   </head>
-  <body style="margin-top: 3%;">
+  <body style="margin-top: 2%; overflow-x:hidden;overflow-y:hidden;">
+<div class="container" style="">
 
     <div class="modal fade" id="NovoModalNovo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -41,7 +42,7 @@
           </div>     
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <a href="{% url 'equipment_type_list' %}" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</a>
         <button class="btn btn-primary">Salvar</button>
         </form>
       </div>
@@ -50,7 +51,7 @@
 </div>
 
 
-    <div class="container">
+    
       <div class="row " style="padding-left: 5%;">
           <span>
             <img src={% static "images/equipamentos.png" %} style="height: 30px; width: 30px; ">
@@ -61,7 +62,7 @@
     <div style="margin-top: 10px;" class="row justify-content-center">
         <form class="form-inline" method="POST" action="{% url 'search_type' %}">{% csrf_token %}
           <div class="input-group">
-            <input class="form-control mr-2 rounded-pill" type="cemquipamento" name="cemquipamento" style="width: 900px; background: #e9ecef">
+            <input class="form-control mr-2 rounded-pill" type="cemquipamento" name="cemquipamento" style="width: 750px; background: #e9ecef">
             <button class="border-0" style="background: #FFFFFF;">
               <span>
                 <img src={% static "images/lupa.png" %} style="height: 30px; width: 30px">
@@ -74,51 +75,62 @@
 
       </div>
 
-  <table class="table table-sm" style="width: 1000px;  margin:auto; margin-top: 10px;" >
-  <thead>
-    <tr>
-      <th scope="col" width="60%" style="text-align: left;">
-        <a href="" style="color: black;">Nome</a>
-      </th>
-      <th scope="col" width="40%" style="text-align: left;">
-        <a href="{% url "equipment_type_order_by" 'name' %}" style="color: black;">Ações</a>
-      </th>
-    </tr>
-    </thead>
-  <tbody>
-   {% load my_tag %}
-   {% for equipment_type in object_list  %}
-    <tr>
-    
-      <td>{{ equipment_type.name }}</td>
-      
-      <td >
+  <table class="table table-sm" style="width: 800px;  margin:auto; margin-top: 10px;" >
+    <div class="row justify-content-md-center">
+      <thead>
+        <tr class="d-flex">
+          <th class="col-lg-1 col-md-1 col-sm-1"></th>
+          <th class="col-lg-7 col-md-7 col-sm-7">
+            <a href="" style="color: black;">Nome</a>
+          </th>
+          <th class="col-lg-3 col-md-3 col-sm-3">
+            <a href="{% url "equipment_type_order_by" 'name' %}" style="color: black;">Ações</a>
+          </th>
+        </tr>
+        </thead>
+      <tbody>
+       {% load my_tag %}
+       {% for equipment_type in object_list  %}
+        <tr class="d-flex">
+          <td class="col-lg-1 col-md-1 col-sm-1"></td>
+          <td class="col-lg-7 col-md-7 col-sm-7">{{ equipment_type.name }}</td>
+          
+          <td class="col-lg-3 col-md-3 col-sm-3">
 
-        {% include 'equipments/equipment_type_form.html' with equipment_type=equipment_type %}
-          <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalEdit{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
-            Editar
-          </button>
+            {% include 'equipments/equipment_type_form.html' with equipment_type=equipment_type %}
+              <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalEdit{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
+                Editar
+              </button>
 
-        {% include 'equipments/equipment_type_confirm_delete.html' with equipment_type=equipment_type %}
-          <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalLabel{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
-            {% ActiveOrInactiveType equipment_type.id %}
-          </button>
-      </td>
-    </tr>
-     {% endfor %}
-  </tbody>
+            {% include 'equipments/equipment_type_confirm_delete.html' with equipment_type=equipment_type %}
+              <button type="button" class="btn btn-sm rounded-pill" data-toggle="modal" data-target="#ModalLabel{{equipment_type.id}}" style="margin-left: 5px;background: #e9ecef">
+                {% ActiveOrInactiveType equipment_type.id %}
+              </button>
+          </td>
+        </tr>
+         {% endfor %}
+      </tbody>
+    </div>
 </table>
- <hr width="1000px" style="margin-top: -1px;">
-   <nav aria-label="Page navigation example">
-    <ul class="pagination justify-content-center">
-      <li class="page-item"><a class="page-link" href="#">Primeira</a></li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item"><a class="page-link" href="#">Última</a></li>
-    </ul>
-  </nav>
-  <div class="row" style="padding-left: 80%; margin-top: 10px; margin-bottom: 15px;">
+
+<nav aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+          {% if object_list.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; Primeira</a></li>
+              <li class="page-item"><a class="page-link" href="?page={{ object_list.previous_page_number }}">Anterior</a></li>
+          {% endif %}
+
+          <li class="page-item"> <a class="page-link">Página {{ object_list.number }} de {{ object_list.paginator.num_pages }}.</a></li>
+
+          {% if object_list.has_next %}
+              <li class="page-item"><a class="page-link"  href="?page={{ object_list.next_page_number }}">Próximo</a></li>
+              <li class="page-item"><a class="page-link"  href="?page={{ object_list.paginator.num_pages }}">Última &raquo;</a></li>
+          {% endif %}
+
+      </ul>
+</nav>
+
+  <div class="row" style="padding-left: 80%; margin-top: 5px; margin-bottom: 5px;">
         
         <button data-toggle="modal" data-target="#NovoModalNovo" class="btn rounded-pill" style="background: #e9ecef">
           Novo

@@ -3,9 +3,9 @@ from users.APIs.dpfj import *
 from users.APIs.dpfpdd import *
 from users.models import Client
 
-so_file = "users/APIs/lib/windows/x64/dpfpdd"
+so_file = "C:/Users/nupreds/myenv/conequi-deploy/users/APIs/lib/windows/x64/dpfpdd"
 dpfpdd = CDLL(so_file)
-so_file = "users/APIs/lib/windows/x64/dpfj"
+so_file = "C:/Users/nupreds/myenv/conequi-deploy/users/APIs/lib/windows/x64/dpfj"
 dpfj = CDLL(so_file)
 
 def CaptureFinger(szFingerName, hReader, nFtType, ppFt, pFtSize):
