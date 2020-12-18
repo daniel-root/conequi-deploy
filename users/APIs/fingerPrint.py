@@ -129,6 +129,9 @@ def Verification(hReader):
 # Defining main function 
 def main(tipo):
     #Inicializar
+
+    #dpfpdd.dpfpdd_exit()
+    
     result = dpfpdd.dpfpdd_init()
     if(DPFPDD_SUCCESS == result): 
         #print("calling dpfpdd_init()")
@@ -151,6 +154,7 @@ def main(tipo):
             #Inicia o leitor
             pdev = DPFPDD_DEV()
             dev_name = dev_infos.name
+            #dpfpdd.dpfpdd_close(pdev)
             dpfpdd.dpfpdd_open.argtypes = [POINTER(c_char),POINTER(DPFPDD_DEV)]
             dpfpdd.dpfpdd_open.restype = c_int
             result = dpfpdd.dpfpdd_open(dev_name,byref(pdev))
