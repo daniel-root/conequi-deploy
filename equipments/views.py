@@ -209,6 +209,7 @@ def email_(request,pk,template_name='equipments/equipment_list.html'):
     user = Client.objects.filter(usuario=equipment_user.user_loan)
     equipment = Equipment.objects.filter(id = equipment_user.equipment)
     internet = email_atraso(user[0].usuario, equipment[0].type_equipment, equipment[0].tag, equipment[0].description,user[0].email)
+    enviar(user[0].usuario, equipment[0].type_equipment, equipment[0].tag, equipment[0].description,user[0].cod_telegram)
     #print(internet)
     data = {}
     data['type'] = 'Todos'

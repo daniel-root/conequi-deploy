@@ -64,6 +64,7 @@ def Atraso():
         if timezone.now() >= time.limit_time:
             #print(time.equipment)
             equipment = Equipment.objects.filter(id = time.equipment)
+            equipment.update(status='Atrasado')
             if equipment[0].email_sent == False:
                 
                 user = Client.objects.filter(usuario=time.user_loan)
@@ -74,7 +75,7 @@ def Atraso():
                     continue
                 else:
                     equipment.update(email_sent=False)
-                equipment.update(status='Atrasado')
+                
                 if cod_telegram[0] != 'D':
                     enviar(user[0].usuario, equipment[0].type_equipment, equipment[0].tag, equipment[0].description,user[0].cod_telegram)
 
