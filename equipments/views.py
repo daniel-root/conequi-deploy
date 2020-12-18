@@ -18,8 +18,8 @@ from reportlab.lib import colors
  
 def home(request):
     if request.session.has_key('username'):
-        TelegramCadastro()
-        EmailsNotSend()
+        #TelegramCadastro()
+        #EmailsNotSend()
         return render(request,'home.html')
     return render(request,'login.html')
 
